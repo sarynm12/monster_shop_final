@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Merchant do
-  describe 'Relationships' do
+  describe 'relationships' do
     it {should have_many :items}
     it {should have_many(:order_items).through(:items)}
     it {should have_many :users}
   end
 
-  describe 'Validations' do
+  describe 'validations' do
     it {should validate_presence_of :name}
     it {should validate_presence_of :address}
     it {should validate_presence_of :city}
@@ -15,7 +15,7 @@ RSpec.describe Merchant do
     it {should validate_presence_of :zip}
   end
 
-  describe 'Instance Methods' do
+  describe 'instance Methods' do
     before :each do
       @megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
       @brian = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)

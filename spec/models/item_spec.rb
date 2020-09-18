@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Item do
-  describe 'Relationships' do
+  describe 'relationships' do
     it {should belong_to :merchant}
     it {should have_many :order_items}
     it {should have_many(:orders).through(:order_items)}
     it {should have_many :reviews}
   end
 
-  describe 'Validations' do
+  describe 'validations' do
     it {should validate_presence_of :name}
     it {should validate_presence_of :description}
     it {should validate_presence_of :image}
@@ -16,7 +16,7 @@ RSpec.describe Item do
     it {should validate_presence_of :inventory}
   end
 
-  describe 'Instance Methods' do
+  describe 'instance Methods' do
     before :each do
       @megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
       @ogre = @megan.items.create!(name: 'Ogre', description: "I'm an Ogre!", price: 20, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 5 )
