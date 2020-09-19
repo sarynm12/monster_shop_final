@@ -20,21 +20,14 @@ RSpec.describe 'Merchant Discount Index Page' do
     end
 
     it 'has a link to my discounts' do
-      visit '/merchant'
-
-      expect(page).to have_link('Discounts')
-      click_link 'Discounts'
-
-      expect(current_path).to eq('/merchant/discounts')
-    end
-
-    it 'has a link to create a new discount' do
       visit '/merchant/discounts'
-
-      expect(page).to have_link("Create New Discount")
-      click_link "Create New Discount"
+      click_link 'Create New Discount'
 
       expect(current_path).to eq('/merchant/discounts/new')
+      expect(page).to have_content('Discount Percentage:')
+      expect(page).to have_content('Minimum Quantity:')
+      expect(page).to have_content('Description:')
+
     end
 
   end
