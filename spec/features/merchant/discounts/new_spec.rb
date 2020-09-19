@@ -33,8 +33,27 @@ RSpec.describe 'Merchant Discount Index Page' do
       fill_in :description, with: '10% off when you buy 5 or more items'
 
       click_on 'Create Discount'
+      require "pry"; binding.pry
       expect(current_path).to eq('/merchant/discounts')
       expect(page).to have_content("Your new discount has been added")
+    end
+
+    it 'will display a flash message if there are missing fields for a new discount' do
+      visit '/merchant/discounts'
+      click_link 'Create New Discount'
+
+      expect(current_path).to eq('/merchant/discounts/new')
+      expect(page).to have_content('Discount Percentage:')
+      expect(page).to have_content('Minimum Quantity:')
+      expect(page).to have_content('Description:')
+
+      fill_in :discount_percentage, with: 10
+      fill_in :minimum_quantity, with: 5
+      fill_in :description, with: ''
+
+      click_on 'Create Discount'
+      expect(page).to have_content("Please fill out all 3 fields")
+      expect(current_path).to eq('/merchant/discounts/new')
     end
 
   end
