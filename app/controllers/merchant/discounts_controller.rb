@@ -1,3 +1,7 @@
 class Merchant::DiscountsController < Merchant::BaseController
 
-end 
+  def index
+    @discounts = Discount.all 
+  end
+
+end
