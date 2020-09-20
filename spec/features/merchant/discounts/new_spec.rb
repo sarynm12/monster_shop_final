@@ -33,7 +33,7 @@ RSpec.describe 'Merchant Discount Index Page' do
       fill_in :description, with: '10% off when you buy 5 or more items'
 
       click_on 'Create Discount'
-      require "pry"; binding.pry
+
       expect(current_path).to eq('/merchant/discounts')
       expect(page).to have_content("Your new discount has been added")
     end
