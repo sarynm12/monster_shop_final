@@ -1,7 +1,7 @@
 class Merchant::DiscountsController < Merchant::BaseController
 
   def index
-    @discounts = Discount.all
+    @merchant = Merchant.find(current_user.merchant_id)
   end
 
   def new
@@ -10,8 +10,8 @@ class Merchant::DiscountsController < Merchant::BaseController
 
   def create
     merchant = current_user.merchant
-    discount = merchant.discounts.new(discount_params)
-    if discount.save
+    @discount = merchant.discounts.new(discount_params)
+    if @discount.save
       redirect_to '/merchant/discounts'
       flash[:success] = "Your new discount has been added"
     else
