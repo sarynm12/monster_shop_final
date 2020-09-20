@@ -2,7 +2,7 @@
 <br>
 <h3><%= link_to "Create New Discount", "/merchant/discounts/new" %></h3>
 <ul>
-<% @discounts.each do |discount| %>
+<% @merchant.discounts.each do |discount| %>
   <li>Percentage Off:<%= discount.discount_percentage %></li>
   <li>Minimum Quantity Required:<%= discount.minimum_quantity %></li>
   <li>Description:<%= discount.description %></li>
