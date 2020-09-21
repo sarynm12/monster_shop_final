@@ -42,5 +42,18 @@ RSpec.describe 'Merchant Discount Edit Page' do
       expect(page).to have_content('8% off when you buy 4 items or more')
     end
 
+    it 'displays a flash message if an edit field is left empty' do
+
+      visit "/merchant/discounts/edit/#{@discount1.id}"
+
+      fill_in :discount_percentage, with: 8
+      fill_in :minimum_quantity, with: ''
+      fill_in :description, with: '8% off when you buy 4 items or more'
+      click_on 'Update Discount'
+
+      expect(page).to have_content("Please fill out all 3 fields")
+      expect(current_path).to eq("/merchant/discounts/edit/#{@discount1.id}")
+    end
+
   end
 end
