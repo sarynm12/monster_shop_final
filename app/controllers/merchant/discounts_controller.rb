@@ -42,8 +42,6 @@ class Merchant::DiscountsController < Merchant::BaseController
     redirect_to "/merchant/discounts"
   end
 
-
-
   private
   def discount_params
     params.permit(:discount_percentage, :minimum_quantity, :description)
