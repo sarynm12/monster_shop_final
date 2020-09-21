@@ -20,6 +20,21 @@ class Merchant::DiscountsController < Merchant::BaseController
     end
   end
 
+  def edit
+    @discount = Discount.find(params[:discount_id])
+  end
+
+  def update
+    @discount = Discount.find(params[:discount_id])
+    @discount.update(discount_params)
+    if @discount.save
+      redirect_to '/merchant/discounts'
+    else
+      flash[:notice] = "Please fill out all 3 fields"
+      redirect_to "/merchant/discounts/edit/#{@discount.id}"
+    end
+  end
+
 
 
   private
