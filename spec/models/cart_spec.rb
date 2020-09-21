@@ -1,17 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe Cart do
-  describe 'instance Methods' do
+  describe 'instance methods' do
     before :each do
       @megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
       @brian = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)
+      @m_user = @megan.users.create!(name: 'Megan', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218, email: 'megan@example.com', password: 'securepassword', role: 1)
       @ogre = @megan.items.create!(name: 'Ogre', description: "I'm an Ogre!", price: 20, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 5 )
       @giant = @megan.items.create!(name: 'Giant', description: "I'm a Giant!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 2 )
+      @monster = @megan.items.create!(name: 'Monster', description: 'Stuffed Animal', price: 10, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 10)
       @hippo = @brian.items.create!(name: 'Hippo', description: "I'm a Hippo!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 3 )
       @cart = Cart.new({
         @ogre.id.to_s => 1,
         @giant.id.to_s => 2
         })
+      @cart2 = Cart.new({
+        @ogre.id.to_s => 2,
+        @monster.id.to_s => 5})
+      @discount1 = @megan.discounts.create!(discount_percentage: 10, minimum_quantity: 5, description: '10% off when you buy 5 or more items')
     end
 
     it '.contents' do
@@ -63,5 +69,25 @@ RSpec.describe Cart do
 
       expect(@cart.count_of(@giant.id)).to eq(1)
     end
+
+    it '.discount_eligible?()' do
+      expect(@cart.discount_eligible?(@ogre.id, @discount1)).to eq(false)
+      expect(@cart.discount_eligible?(@giant.id, @discount1)).to eq(false)
+      expect(@cart2.discount_eligible?(@ogre.id, @discount1)).to eq(false)
+      expect(@cart2.discount_eligible?(@monster.id, @discount1)).to eq(true)
+    end
+
+    it '.check_discount()' do
+      expect(@cart.check_discount(@ogre.id)).to eq(false)
+      expect(@cart.check_discount(@giant.id)).to eq(false)
+      expect(@cart2.check_discount(@ogre.id)).to eq(false)
+      expect(@cart2.check_discount(@monster.id)).to eq(true)
+    end
+
+    it '.best_discount()' do
+      discount2 = @megan.discounts.create!(discount_percentage: 20, minimum_quantity: 10, description: '20% off when you buy 10 or more items')
+      expect(@cart.best_discount(@ogre.id)).to eq(0.0)
+    end
+
   end
 end

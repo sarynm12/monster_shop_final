@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe 'Merchant Dashboard' do
-  describe 'As an employee of a merchant' do
+RSpec.describe 'Merchant Discount Index Page' do
+  describe 'As a merchant' do
     before :each do
       @merchant_1 = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
       @merchant_2 = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)
@@ -19,67 +19,42 @@ RSpec.describe 'Merchant Dashboard' do
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@m_user)
     end
 
-    it 'I can see my merchants information on the merchant dashboard' do
-      visit '/merchant'
-
-      expect(page).to have_link(@merchant_1.name)
-      expect(page).to have_content(@merchant_1.address)
-      expect(page).to have_content("#{@merchant_1.city} #{@merchant_1.state} #{@merchant_1.zip}")
-    end
-
-    it 'I do not have a link to edit the merchant information' do
-      visit '/merchant'
-
-      expect(page).to_not have_link('Edit')
-    end
-
-    it 'I see a list of pending orders containing my items' do
-      visit '/merchant'
-
-      within '.orders' do
-        expect(page).to_not have_css("#order-#{@order_1.id}")
-
-        within "#order-#{@order_2.id}" do
-          expect(page).to have_link(@order_2.id)
-          expect(page).to have_content("Potential Revenue: #{@order_2.merchant_subtotal(@merchant_1.id)}")
-          expect(page).to have_content("Quantity of Items: #{@order_2.merchant_quantity(@merchant_1.id)}")
-          expect(page).to have_content("Created: #{@order_2.created_at}")
-        end
-
-        within "#order-#{@order_3.id}" do
-          expect(page).to have_link(@order_3.id)
-          expect(page).to have_content("Potential Revenue: #{@order_3.merchant_subtotal(@merchant_1.id)}")
-          expect(page).to have_content("Quantity of Items: #{@order_3.merchant_quantity(@merchant_1.id)}")
-          expect(page).to have_content("Created: #{@order_3.created_at}")
-        end
-      end
-    end
-
-    it 'I can link to an order show page' do
-      visit '/merchant'
-
-      click_link @order_2.id
-
-      expect(current_path).to eq("/merchant/orders/#{@order_2.id}")
-    end
-
-    it 'has a link to my discounts' do
-      visit '/merchant'
-
-      expect(page).to have_link('Discounts')
-      click_link 'Discounts'
-
-      expect(current_path).to eq('/merchant/discounts')
-    end
-
-    it 'has a link to create a new discount' do
+    it 'can create a new discount' do
       visit '/merchant/discounts'
-
-      expect(page).to have_link("Create New Discount")
-      click_link "Create New Discount"
+      click_link 'Create New Discount'
 
       expect(current_path).to eq('/merchant/discounts/new')
-    
+      expect(page).to have_content('Discount Percentage:')
+      expect(page).to have_content('Minimum Quantity:')
+      expect(page).to have_content('Description:')
+
+      fill_in :discount_percentage, with: 10
+      fill_in :minimum_quantity, with: 5
+      fill_in :description, with: '10% off when you buy 5 or more items'
+
+      click_on 'Create Discount'
+
+      expect(current_path).to eq('/merchant/discounts')
+      expect(page).to have_content("Your new discount has been added")
+    end
+
+    it 'will display a flash message if there are missing fields for a new discount' do
+      visit '/merchant/discounts'
+      click_link 'Create New Discount'
+
+      expect(current_path).to eq('/merchant/discounts/new')
+      expect(page).to have_content('Discount Percentage:')
+      expect(page).to have_content('Minimum Quantity:')
+      expect(page).to have_content('Description:')
+
+      fill_in :discount_percentage, with: 10
+      fill_in :minimum_quantity, with: 5
+      fill_in :description, with: ''
+
+      click_on 'Create Discount'
+      
+      expect(page).to have_content("Please fill out all 3 fields")
+      expect(current_path).to eq('/merchant/discounts/new')
     end
 
   end
