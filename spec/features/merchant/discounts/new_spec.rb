@@ -52,6 +52,7 @@ RSpec.describe 'Merchant Discount Index Page' do
       fill_in :description, with: ''
 
       click_on 'Create Discount'
+      
       expect(page).to have_content("Please fill out all 3 fields")
       expect(current_path).to eq('/merchant/discounts/new')
     end
