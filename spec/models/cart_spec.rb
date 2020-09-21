@@ -89,5 +89,9 @@ RSpec.describe Cart do
       expect(@cart.best_discount(@ogre.id)).to eq(0.0)
     end
 
+    it '.subtotal()' do
+      expect(@cart2.subtotal_of(@monster.id)).to eq(45.0)
+    end
+
   end
 end
