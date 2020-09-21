@@ -6,5 +6,6 @@
   <li>Percentage Off:<%= discount.discount_percentage %></li>
   <li>Minimum Quantity Required:<%= discount.minimum_quantity %></li>
   <li>Description:<%= discount.description %></li>
+  <%= link_to 'Edit Discount', "/merchant/discounts/edit/#{discount.id}" %>
 <% end %>
 </ul>
