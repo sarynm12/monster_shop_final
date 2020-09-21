@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Cart do
-  describe 'instance Methods' do
+  describe 'instance methods' do
     before :each do
       @megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
       @brian = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)
@@ -75,6 +75,18 @@ RSpec.describe Cart do
       expect(@cart.discount_eligible?(@giant.id, @discount1)).to eq(false)
       expect(@cart2.discount_eligible?(@ogre.id, @discount1)).to eq(false)
       expect(@cart2.discount_eligible?(@monster.id, @discount1)).to eq(true)
+    end
+
+    it '.check_discount()' do
+      expect(@cart.check_discount(@ogre.id)).to eq(false)
+      expect(@cart.check_discount(@giant.id)).to eq(false)
+      expect(@cart2.check_discount(@ogre.id)).to eq(false)
+      expect(@cart2.check_discount(@monster.id)).to eq(true)
+    end
+
+    it '.best_discount()' do
+      discount2 = @megan.discounts.create!(discount_percentage: 20, minimum_quantity: 10, description: '20% off when you buy 10 or more items')
+      expect(@cart.best_discount(@ogre.id)).to eq(0.0)
     end
 
   end
