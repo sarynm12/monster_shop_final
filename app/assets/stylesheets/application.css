@@ -14,11 +14,13 @@
  *= require_self
  */
  body {
-  background-color: lightgray;
+  background-color: white;
   color: navy;
+  font-family: serif;
  }
 
  nav {
   background-color: maroon;
   color: white;
+  font-family: serif;
 }
