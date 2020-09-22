@@ -13,3 +13,16 @@
  *= require_tree .
  *= require_self
  */
+ body {
+  background-color: lavenderblush;
+ }
+
+ .nav{
+  /* color: #eb67bf; */
+  background-color: pink;
+  list-style-type: none;
+  margin: 5px;
+  display: flex;
+  padding-right: 10px;
+  font-family: marker felt, fantasy;
+}
