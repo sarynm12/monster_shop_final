@@ -84,10 +84,10 @@ RSpec.describe Cart do
       expect(@cart2.check_item_discount(@monster.id)).to eq(true)
     end
 
-    it '.best_discount()' do
+    it '.percent_off()' do
       discount2 = @megan.discounts.create!(discount_percentage: 20, minimum_quantity: 10, description: '20% off when you buy 10 or more items')
-      expect(@cart.best_discount(@ogre.id)).to eq(0.0)
-      expect(@cart2.best_discount(@monster.id)).to eq(0.10)
+      expect(@cart.percent_off(@ogre.id)).to eq(0.0)
+      expect(@cart2.percent_off(@monster.id)).to eq(0.10)
     end
 
     it '.subtotal()' do
