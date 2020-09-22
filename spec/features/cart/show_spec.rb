@@ -2,7 +2,7 @@ require 'rails_helper'
 include ActionView::Helpers::NumberHelper
 
 RSpec.describe 'Cart Show Page' do
-  describe 'As a Visitor' do
+  describe 'as a visitor' do
     before :each do
       @megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
       @brian = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)
@@ -166,6 +166,26 @@ RSpec.describe 'Cart Show Page' do
         expect(current_path).to eq('/cart')
         expect(page).to_not have_content("#{@hippo.name}")
         expect(page).to have_content("Cart: 0")
+      end
+
+      it 'displays a flash message if user qualifies for a discount' do
+        monster = @megan.items.create!(name: 'Monster', description: 'Stuffed Animal', price: 10, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 10)
+        discount = @megan.discounts.create!(discount_percentage: 10, minimum_quantity: 5, description: '20% off when you buy 10 or more items')
+
+        visit item_path(monster)
+        click_button 'Add to Cart'
+
+        visit '/cart'
+
+        within "#item-#{monster.id}" do
+          4.times do
+            click_button('More of This!')
+          end
+        end
+
+        expect(current_path).to eq('/cart')
+        expect(page).to have_content("Score! You qualify for a discount")
+        expect(page).to have_content("Quantity: 5")
       end
     end
   end
