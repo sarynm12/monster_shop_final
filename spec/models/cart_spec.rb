@@ -77,11 +77,11 @@ RSpec.describe Cart do
       expect(@cart2.discount_eligible?(@monster.id, @discount1)).to eq(true)
     end
 
-    it '.check_discount()' do
-      expect(@cart.check_discount(@ogre.id)).to eq(false)
-      expect(@cart.check_discount(@giant.id)).to eq(false)
-      expect(@cart2.check_discount(@ogre.id)).to eq(false)
-      expect(@cart2.check_discount(@monster.id)).to eq(true)
+    it '.check_item_discount()' do
+      expect(@cart.check_item_discount(@ogre.id)).to eq(false)
+      expect(@cart.check_item_discount(@giant.id)).to eq(false)
+      expect(@cart2.check_item_discount(@ogre.id)).to eq(false)
+      expect(@cart2.check_item_discount(@monster.id)).to eq(true)
     end
 
     it '.best_discount()' do
@@ -101,6 +101,16 @@ RSpec.describe Cart do
         })
 
       expect(cart3.grand_total).to eq(180.0)
+    end
+
+    it '.best_discount()' do
+      discount2 = @megan.discounts.create!(discount_percentage: 20, minimum_quantity: 10, description: '20% off when you buy 10 or more items')
+      cart3 = Cart.new({
+        @ogre.id.to_s => 5,
+        @monster.id.to_s => 10
+        })
+        require "pry"; binding.pry
+      expect(cart3.highest_discount(@contents)).to eq()
     end
 
   end
