@@ -29,4 +29,5 @@ class Item < ApplicationRecord
   def average_rating
     reviews.average(:rating)
   end
+
 end
