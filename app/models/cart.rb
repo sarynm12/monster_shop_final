@@ -38,7 +38,7 @@ class Cart
 
   def subtotal_of(item_id)
     item = Item.find(item_id)
-    if check_discount(item_id) == false
+    if check_item_discount(item_id) == false
       @contents[item_id.to_s] * Item.find(item_id).price
     else
       result = @contents[item_id.to_s] * Item.find(item_id).price * best_discount(item_id)
@@ -54,7 +54,22 @@ class Cart
     count_of(item_id) >= discount.minimum_quantity
   end
 
-  def check_discount(item_id)
+  # def best_discount(item_id)
+  #   item = Item.find(item_id)
+  #   if item.merchant.discounts.count > 1
+  #     result = item.merchant.discounts.order(:discount_percentage).last.discount_percentage
+  #   else
+  #     result = item.merchant.discounts.first.discount_percentage
+  #   end
+  #   result / 100.0
+  # end
+
+  # def highest_discount(items)
+  #   best = Discount.where('discounts.minimum_quantity <= ?', count).order('discounts.discount_percentage DESC').first.discount_percentage
+  #   (best / 100.to_f)
+  # end
+
+  def check_item_discount(item_id)
     Item.find(item_id).merchant.discounts.each do |discount|
       if discount_eligible?(item_id, discount)
         return true
@@ -68,6 +83,5 @@ class Cart
     item = Item.find(item_id)
     item.merchant.discounts.where("minimum_quantity <= ?", count_of(item_id)).maximum(:discount_percentage).to_f / 100.00
   end
-
 
 end
