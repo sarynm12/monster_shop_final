@@ -41,7 +41,7 @@ class Cart
     if check_item_discount(item_id) == false
       @contents[item_id.to_s] * Item.find(item_id).price
     else
-      result = @contents[item_id.to_s] * Item.find(item_id).price * best_discount(item_id)
+      result = @contents[item_id.to_s] * Item.find(item_id).price * percent_off(item_id)
       @contents[item_id.to_s] * Item.find(item_id).price - result
     end
   end
@@ -66,7 +66,11 @@ class Cart
 
   def best_discount(item_id)
     item = Item.find(item_id)
-    item.merchant.discounts.where("minimum_quantity <= ?", count_of(item_id)).maximum(:discount_percentage).to_f / 100.00
+    item.merchant.discounts.where("minimum_quantity <= ?", count_of(item_id))
+  end
+
+  def percent_off(item_id)
+    best_discount(item_id).maximum(:discount_percentage).to_f / 100.00
   end
 
 end
