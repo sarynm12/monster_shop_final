@@ -103,15 +103,5 @@ RSpec.describe Cart do
       expect(cart3.grand_total).to eq(180.0)
     end
 
-    it '.best_discount()' do
-      discount2 = @megan.discounts.create!(discount_percentage: 20, minimum_quantity: 10, description: '20% off when you buy 10 or more items')
-      cart3 = Cart.new({
-        @ogre.id.to_s => 5,
-        @monster.id.to_s => 10
-        })
-        require "pry"; binding.pry
-      expect(cart3.highest_discount(@contents)).to eq()
-    end
-
   end
 end
