@@ -78,10 +78,15 @@ RSpec.describe Cart do
     end
 
     it '.check_item_discount()' do
+      cart3 = Cart.new({
+        @ogre.id.to_s => 5,
+        @hippo.id.to_s => 5
+        })
       expect(@cart.check_item_discount(@ogre.id)).to eq(false)
       expect(@cart.check_item_discount(@giant.id)).to eq(false)
       expect(@cart2.check_item_discount(@ogre.id)).to eq(false)
       expect(@cart2.check_item_discount(@monster.id)).to eq(true)
+      expect(cart3.check_item_discount(@hippo.id)).to eq(false)
     end
 
     it '.percent_off()' do
