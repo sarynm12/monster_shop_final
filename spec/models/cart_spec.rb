@@ -77,16 +77,35 @@ RSpec.describe Cart do
       expect(@cart2.discount_eligible?(@monster.id, @discount1)).to eq(true)
     end
 
-    it '.check_discount()' do
-      expect(@cart.check_discount(@ogre.id)).to eq(false)
-      expect(@cart.check_discount(@giant.id)).to eq(false)
-      expect(@cart2.check_discount(@ogre.id)).to eq(false)
-      expect(@cart2.check_discount(@monster.id)).to eq(true)
+    it '.check_item_discount()' do
+      cart3 = Cart.new({
+        @ogre.id.to_s => 5,
+        @hippo.id.to_s => 5
+        })
+      expect(@cart.check_item_discount(@ogre.id)).to eq(false)
+      expect(@cart.check_item_discount(@giant.id)).to eq(false)
+      expect(@cart2.check_item_discount(@ogre.id)).to eq(false)
+      expect(@cart2.check_item_discount(@monster.id)).to eq(true)
+      expect(cart3.check_item_discount(@hippo.id)).to eq(false)
     end
 
-    it '.best_discount()' do
+    it '.percent_off()' do
       discount2 = @megan.discounts.create!(discount_percentage: 20, minimum_quantity: 10, description: '20% off when you buy 10 or more items')
-      expect(@cart.best_discount(@ogre.id)).to eq(0.0)
+      expect(@cart.percent_off(@ogre.id)).to eq(0.0)
+      expect(@cart2.percent_off(@monster.id)).to eq(0.10)
+    end
+
+    it '.subtotal()' do
+      expect(@cart2.subtotal_of(@monster.id)).to eq(45.0)
+    end
+
+    it 'adjusts grand total when a discount is applied' do
+      cart3 = Cart.new({
+        @ogre.id.to_s => 5,
+        @monster.id.to_s => 10
+        })
+
+      expect(cart3.grand_total).to eq(180.0)
     end
 
   end

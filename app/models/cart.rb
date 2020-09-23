@@ -26,8 +26,8 @@ class Cart
 
   def grand_total
     grand_total = 0.0
-    @contents.each do |item_id, quantity|
-      grand_total += Item.find(item_id).price * quantity
+    @contents.each do |item_id, _|
+      grand_total += subtotal_of(item_id)
     end
     grand_total
   end
@@ -37,7 +37,13 @@ class Cart
   end
 
   def subtotal_of(item_id)
-    @contents[item_id.to_s] * Item.find(item_id).price
+    item = Item.find(item_id)
+    if check_item_discount(item_id) == false
+      @contents[item_id.to_s] * Item.find(item_id).price
+    else
+      result = @contents[item_id.to_s] * Item.find(item_id).price * percent_off(item_id)
+      @contents[item_id.to_s] * Item.find(item_id).price - result
+    end
   end
 
   def limit_reached?(item_id)
@@ -48,9 +54,10 @@ class Cart
     count_of(item_id) >= discount.minimum_quantity
   end
 
-  def check_discount(item_id)
-    Item.find(item_id).merchant.discounts.each do |discount|
-      if discount_eligible?(item_id, discount)
+  def check_item_discount(item_id)
+    merchant_discounts = Item.find(item_id).merchant.discounts
+    merchant_discounts.any? do |discount|
+      if discount_eligible?(item_id, discount) && (discount.merchant.id == Item.find(item_id).merchant.id)
         return true
       else
         return false
@@ -59,6 +66,12 @@ class Cart
   end
 
   def best_discount(item_id)
-    Item.find(item_id).merchant.discounts.where("minimum_quantity <= ?", @contents[item_id.to_s]).maximum(:discount_percentage).to_f / 100.00
+    item = Item.find(item_id)
+    item.merchant.discounts.where("minimum_quantity <= ?", count_of(item_id))
   end
+
+  def percent_off(item_id)
+    best_discount(item_id).maximum(:discount_percentage).to_f / 100.00
+  end
+
 end
