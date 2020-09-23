@@ -57,7 +57,7 @@ class Cart
   def check_item_discount(item_id)
     merchant_discounts = Item.find(item_id).merchant.discounts
     merchant_discounts.any? do |discount|
-      if discount_eligible?(item_id, discount)
+      if discount_eligible?(item_id, discount) && (discount.merchant.id == Item.find(item_id).merchant.id)
         return true
       else
         return false
