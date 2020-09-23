@@ -14,4 +14,5 @@ class OrderItem < ApplicationRecord
   def fulfillable?
     item.inventory >= quantity
   end
+
 end

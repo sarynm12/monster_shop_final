@@ -52,8 +52,28 @@ RSpec.describe 'Merchant Discount Index Page' do
       fill_in :description, with: ''
 
       click_on 'Create Discount'
-      
-      expect(page).to have_content("Please fill out all 3 fields")
+
+      expect(page).to have_content("Description can't be blank")
+      expect(current_path).to eq('/merchant/discounts/new')
+    end
+
+    it 'displays a flash message if appropriate fields are not a number' do
+
+      visit '/merchant/discounts'
+      click_link 'Create New Discount'
+
+      expect(current_path).to eq('/merchant/discounts/new')
+      expect(page).to have_content('Discount Percentage:')
+      expect(page).to have_content('Minimum Quantity:')
+      expect(page).to have_content('Description:')
+
+      fill_in :discount_percentage, with: 10
+      fill_in :minimum_quantity, with: 'hi'
+      fill_in :description, with: 'new discount'
+
+      click_on 'Create Discount'
+
+      expect(page).to have_content("Minimum quantity is not a number")
       expect(current_path).to eq('/merchant/discounts/new')
     end
 

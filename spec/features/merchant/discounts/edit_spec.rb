@@ -51,7 +51,20 @@ RSpec.describe 'Merchant Discount Edit Page' do
       fill_in :description, with: '8% off when you buy 4 items or more'
       click_on 'Update Discount'
 
-      expect(page).to have_content("Please fill out all 3 fields")
+      expect(page).to have_content("Minimum quantity can't be blank and Minimum quantity is not a number")
+      expect(current_path).to eq("/merchant/discounts/edit/#{@discount1.id}")
+    end
+
+    it 'displays a flash message if appropriate fields are not a number' do
+
+      visit "/merchant/discounts/edit/#{@discount1.id}"
+
+      fill_in :discount_percentage, with: 8
+      fill_in :minimum_quantity, with: 'hi'
+      fill_in :description, with: '8% off when you buy 4 items or more'
+      click_on 'Update Discount'
+
+      expect(page).to have_content("Minimum quantity is not a number")
       expect(current_path).to eq("/merchant/discounts/edit/#{@discount1.id}")
     end
 
