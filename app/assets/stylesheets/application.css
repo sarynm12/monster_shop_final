@@ -14,8 +14,8 @@
  *= require_self
  */
  body {
-  background-color: white;
-  color: navy;
+  background-color: #E0E0E0;
+  color: black;
   font-family: serif;
  }
 
@@ -23,4 +23,9 @@
   background-color: maroon;
   color: white;
   font-family: serif;
+  font-size: 20px
+}
+
+a {
+  color: white;
 }
