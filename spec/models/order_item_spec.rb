@@ -40,5 +40,6 @@ RSpec.describe OrderItem do
       expect(@order_item_1.fulfilled).to eq(true)
       expect(@ogre.inventory).to eq(3)
     end
+    
   end
 end

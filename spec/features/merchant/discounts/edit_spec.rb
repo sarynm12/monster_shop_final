@@ -29,7 +29,7 @@ RSpec.describe 'Merchant Discount Edit Page' do
 
     it 'can update an existing discount' do
 
-      visit "/merchant/discounts/edit/#{@discount1.id}"
+      visit "/merchant/discounts/#{@discount1.id}/edit"
 
       fill_in :discount_percentage, with: 8
       fill_in :minimum_quantity, with: 4
@@ -44,7 +44,7 @@ RSpec.describe 'Merchant Discount Edit Page' do
 
     it 'displays a flash message if an edit field is left empty' do
 
-      visit "/merchant/discounts/edit/#{@discount1.id}"
+      visit "/merchant/discounts/#{@discount1.id}/edit"
 
       fill_in :discount_percentage, with: 8
       fill_in :minimum_quantity, with: ''
@@ -52,12 +52,12 @@ RSpec.describe 'Merchant Discount Edit Page' do
       click_on 'Update Discount'
 
       expect(page).to have_content("Minimum quantity can't be blank and Minimum quantity is not a number")
-      expect(current_path).to eq("/merchant/discounts/edit/#{@discount1.id}")
+      expect(current_path).to eq("/merchant/discounts/#{@discount1.id}/edit")
     end
 
     it 'displays a flash message if appropriate fields are not a number' do
 
-      visit "/merchant/discounts/edit/#{@discount1.id}"
+      visit "/merchant/discounts/#{@discount1.id}/edit"
 
       fill_in :discount_percentage, with: 8
       fill_in :minimum_quantity, with: 'hi'
@@ -65,7 +65,7 @@ RSpec.describe 'Merchant Discount Edit Page' do
       click_on 'Update Discount'
 
       expect(page).to have_content("Minimum quantity is not a number")
-      expect(current_path).to eq("/merchant/discounts/edit/#{@discount1.id}")
+      expect(current_path).to eq("/merchant/discounts/#{@discount1.id}/edit")
     end
 
   end
